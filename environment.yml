@@ -1,0 +1,22 @@
+name: cs236605-hw
+channels:
+  - pytorch
+  - defaults
+  - conda-forge
+dependencies:
+  - python=3.6
+  - pytorch=0.4.1
+  - ipython
+  - jupyter
+  - jupyterlab
+  - matplotlib
+  - scipy
+  - numpy
+  - scikit-learn
+  - pandas
+  - cython
+  - pytest
+  - pip:
+    - torchvision
+    - nbmerge
+    - pytest-xdist
