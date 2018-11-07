@@ -179,7 +179,10 @@ def prepare_dist(hw_dir, out_dir, **kwargs):
                         ignore=copytree_ignore_fn)
 
         # Copy extra files
-        for filename in ('main.py', 'environment.yml', '.gitignore'):
+        extra_files = ('main.py',
+                       'py-sbatch.sh', 'jupyter-lab.sh',
+                       'environment.yml', '.gitignore')
+        for filename in extra_files:
             shutil.copy(filename, dest_dir)
 
         # Clear notebook outputs
