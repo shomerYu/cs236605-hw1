@@ -126,13 +126,23 @@ def create_submission_name(hw_dir, submitter_ids):
     return submission_name
 
 
-def copytree_ignore_fn(src, names):
+def copytree_ignore_fn(src, names, is_distribution=True):
     def ignore_predicate(name: str) -> bool:
         return name.startswith('.') \
                or name == '__pycache__' \
                or name == 'data' \
                or re.match(SUBMISSION_ZIPF_PATTERN, name)
 
+    # Completely drop results folders when creating a distribution,
+    # but keep these folders when creating a submission
+    if is_distribution and os.path.basename(src) == 'results':
+        return names
+
+    # Completely drop checkpoints folders
+    if os.path.basename(src) == 'checkpoints':
+        return names
+
+    # Go over names and select the ones to drop
     return [name for name in names if ignore_predicate(name)]
 
 
@@ -252,9 +262,10 @@ def prepare_submission(hw_dir, out_dir, submitter_ids, skip_run, **kwargs):
         shutil.rmtree(dest_dir)
 
     try:
+        def ignore_fn(src, names):
+            return copytree_ignore_fn(src, names, is_distribution=False)
         # Copy assignment directory to a temporary folder
-        shutil.copytree(hw_dir, dest_dir, symlinks=False,
-                        ignore=copytree_ignore_fn)
+        shutil.copytree(hw_dir, dest_dir, symlinks=False, ignore=ignore_fn)
 
         # Create an archive for submission
         sub_zip = zipdir(dest_dir)
