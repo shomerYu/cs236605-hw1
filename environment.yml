@@ -6,6 +6,7 @@ channels:
 dependencies:
   - python=3.7
   - pytorch=1.0.1
+  - torchvision==0.2.1
   - jupyterlab=0.35
   - numpy=1.15
   - scikit-learn=0.19
@@ -16,7 +17,6 @@ dependencies:
   - pytest
   - tqdm
   - pip:
-    - torchvision
     - matplotlib~=3.0
     - nbmerge
     - pytest-xdist
