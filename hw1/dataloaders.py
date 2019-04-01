@@ -29,7 +29,8 @@ def create_train_validation_loaders(dataset: Dataset, validation_ratio,
     #    from the dataset.
 
     # ====== YOUR CODE: ======
-    indices = list(range(len(dataset)))
+    indices = np.random.choice(len(dataset), len(dataset), replace=False)
+    #indices = list(range(len(dataset)))
     sep = int(len(dataset)*validation_ratio)
     val_ind = indices[:sep]
     train_ind = indices[sep:]
