@@ -1,5 +1,4 @@
 import numpy as np
-
 import torch
 from torch.utils.data import Dataset
 
@@ -30,12 +29,14 @@ class RandomImageDataset(Dataset):
         # RNG state outside this method.
 
         # ====== YOUR CODE: ======
-        raise NotImplementedError()
+        np.random.seed(index)
+        # print(np.random.random(self.image_dim))
+        return torch.from_numpy(np.random.random_integers(0,255,self.image_dim)), np.random.randint(0, 9)
         # ========================
 
     def __len__(self):
         # ====== YOUR CODE: ======
-        raise NotImplementedError()
+        return self.num_samples
         # ========================
 
 
@@ -51,7 +52,7 @@ class SubsetDataset(Dataset):
         :param offset: The offset index to start taking samples from.
         """
         if offset + subset_len > len(source_dataset):
-            raise ValueError("Not enough samples in source dataset")
+            raise IndexError()#ueError("Not enough samples in source dataset")
 
         self.source_dataset = source_dataset
         self.subset_len = subset_len
@@ -62,11 +63,13 @@ class SubsetDataset(Dataset):
         # Make sure to raise an IndexError if index is out of bounds.
 
         # ====== YOUR CODE: ======
-        raise NotImplementedError()
+        if index > self.subset_len-1:
+            raise IndexError()#ValueError("index outside of bounds")
+        return self.source_dataset[index+self.offset]
         # ========================
 
     def __len__(self):
         # ====== YOUR CODE: ======
-        raise NotImplementedError()
+        return self.subset_len
         # ========================
 
