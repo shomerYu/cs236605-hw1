@@ -24,7 +24,7 @@ class ClassifierLoss(abc.ABC):
 
 
 class SVMHingeLoss(ClassifierLoss):
-    def __init__(self, delta=1.0):
+    def __init__(self, delta=1):
         self.delta = delta
         self.grad_ctx = {}
 
@@ -55,12 +55,17 @@ class SVMHingeLoss(ClassifierLoss):
 
         loss = None
         # ====== YOUR CODE: ======
-        raise NotImplementedError()
+        M = torch.as_tensor(x_scores)
+        b = M[torch.arange(len(y)), y].reshape(-1, 1)
+        M[torch.arange(len(y)), y] -= self.delta
+        M += self.delta - b
+        c = torch.max(torch.zeros(M.shape), M)
+        loss = torch.sum(c)/len(y)
         # ========================
 
         # TODO: Save what you need for gradient calculation in self.grad_ctx
         # ====== YOUR CODE: ======
-        raise NotImplementedError()
+        self.grad_ctx = [M, y]
         # ========================
 
         return loss
@@ -73,7 +78,10 @@ class SVMHingeLoss(ClassifierLoss):
 
         grad = None
         # ====== YOUR CODE: ======
-        raise NotImplementedError()
+        # M=self.grad_ctx[0]
+        # y=self.grad_ctx[1]
+        # M[torch.arange(len(y)), y] *= -1
+        # grad = torch.mm()
         # ========================
 
         return grad

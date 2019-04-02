@@ -1,6 +1,5 @@
 import torch
 
-
 class TensorView(object):
     """
     A transform that returns a new view of a tensor.
@@ -10,9 +9,10 @@ class TensorView(object):
         self.view_dims = view_dims
 
     def __call__(self, tensor: torch.Tensor):
+
         # TODO: Use Tensor.view() to implement the transform.
         # ====== YOUR CODE: ======
-        raise NotImplementedError()
+        return tensor.reshape(self.view_dims)
         # ========================
 
 
@@ -29,7 +29,7 @@ class BiasTrick(object):
         # Make sure to use the same data type.
 
         # ====== YOUR CODE: ======
-        raise NotImplementedError()
+        return torch.cat((tensor, torch.ones(1)), 0)
         # ========================
 
 
