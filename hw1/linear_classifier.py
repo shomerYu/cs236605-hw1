@@ -101,7 +101,36 @@ class LinearClassifier(object):
             average_loss = 0
 
             # ====== YOUR CODE: ======
-            raise NotImplementedError()
+            len_train = len(dl_train)
+            len_valid = len(dl_valid)
+            mean_acc = 0
+            mean_loss = 0
+            mean_grad = torch.zeros(self.weights.shape)
+            for (x, y) in dl_train:
+                y_pred, class_score = self.predict(x)
+                mean_acc += self.evaluate_accuracy(y, y_pred)
+                mean_loss += loss_fn.loss(x, y, class_score, y_pred)
+                mean_grad += loss_fn.grad()
+
+            mean_acc /= len_train
+            mean_loss /= len_train
+
+            train_res.accuracy.append(mean_acc)
+            train_res.loss.append(mean_loss)
+            self.weights -= learn_rate * mean_grad / len_train
+
+            mean_acc = 0
+            mean_loss = 0
+            for (x, y) in dl_valid:
+                y_pred, class_score = self.predict(x)
+                mean_acc += self.evaluate_accuracy(y, y_pred)
+                mean_loss += loss_fn.loss(x, y, class_score, y_pred)
+
+            mean_acc /= len_valid
+            mean_loss /= len_valid
+
+            valid_res.accuracy.append(mean_acc)
+            valid_res.loss.append(mean_loss)
             # ========================
             print('.', end='')
 

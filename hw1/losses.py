@@ -65,12 +65,13 @@ class SVMHingeLoss(ClassifierLoss):
 
         # TODO: Save what you need for gradient calculation in self.grad_ctx
         # ====== YOUR CODE: ======
-        self.grad_ctx = [M, y]
+        self.grad_ctx = [c, x, y]
         # ========================
 
         return loss
 
     def grad(self):
+
 
         # TODO: Implement SVM loss gradient calculation
         # Same notes as above. Hint: Use the matrix M from above, based on
@@ -78,10 +79,16 @@ class SVMHingeLoss(ClassifierLoss):
 
         grad = None
         # ====== YOUR CODE: ======
-        # M=self.grad_ctx[0]
-        # y=self.grad_ctx[1]
-        # M[torch.arange(len(y)), y] *= -1
-        # grad = torch.mm()
+        c = self.grad_ctx[0]
+        x = self.grad_ctx[1]
+        y = self.grad_ctx[2]
+        num_train = len(y)
+
+        binary = c
+        binary[c > 0] = 1
+        binary[torch.arange(len(y)), y] = torch.sum(binary, 1)*-1
+        grad = torch.mm(x.t(), binary)
+        grad /= num_train
         # ========================
 
         return grad
