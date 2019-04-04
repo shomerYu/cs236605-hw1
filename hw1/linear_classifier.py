@@ -150,7 +150,17 @@ class LinearClassifier(object):
         # The output shape should be (n_classes, C, H, W).
 
         # ====== YOUR CODE: ======
-        raise NotImplementedError()
+        w = self.weights
+
+        if has_bias:
+            w = w[:-1, :]
+        aa = torch.Tensor(self.n_classes, img_shape[0], img_shape[1], img_shape[2])
+        # aa = torch.Tensor(self.n_classes, for x in img_shape: x)
+        w_images = torch.zeros(aa.shape)
+        print(w_images.shape)
+        for i in range(self.n_classes):
+            w_images[i] = w[:, i].reshape(aa.shape[1:])
+
         # ========================
 
         return w_images
