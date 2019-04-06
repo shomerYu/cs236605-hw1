@@ -50,7 +50,7 @@ class LinearRegressor(BaseEstimator, RegressorMixin):
         w_opt = None
         # ====== YOUR CODE: ======
         N = len(y)
-        temp = np.linalg.inv(1 / N * (np.dot(X.T, X) + self.reg_lambda))
+        temp = np.linalg.pinv(1 / N * (np.dot(X.T, X) + self.reg_lambda))
         w_opt = np.dot(1 * np.dot(temp, X.T), y) / N
         # ========================
 
@@ -93,7 +93,7 @@ class BostonFeaturesTransformer(BaseEstimator, TransformerMixin):
         # TODO: Your custom initialization, if needed
         # Add any hyperparameters you need and save them as above
         # ====== YOUR CODE: ======
-        raise NotImplementedError()
+        self.poly = PolynomialFeatures(self.degree)
         # ========================
 
     def fit(self, X, y=None):
@@ -115,7 +115,7 @@ class BostonFeaturesTransformer(BaseEstimator, TransformerMixin):
 
         X_transformed = None
         # ====== YOUR CODE: ======
-        raise NotImplementedError()
+        X_transformed = self.poly.fit_transform(X)
         # ========================
 
         return X_transformed
