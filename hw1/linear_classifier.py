@@ -105,8 +105,10 @@ class LinearClassifier(object):
             len_valid = len(dl_valid)
             mean_acc = 0
             mean_loss = 0
+            
             mean_grad = torch.zeros(self.weights.shape)
             for (x, y) in dl_train:
+
                 y_pred, class_score = self.predict(x)
                 mean_acc += self.evaluate_accuracy(y, y_pred)
                 mean_loss += loss_fn.loss(x, y, class_score, y_pred)
@@ -117,20 +119,21 @@ class LinearClassifier(object):
 
             train_res.accuracy.append(mean_acc)
             train_res.loss.append(mean_loss)
+
+            mean_acc2 = 0
+            mean_loss2 = 0
+            for (x2, y2) in dl_valid:
+                y_pred, class_score = self.predict(x2)
+                mean_acc2 += self.evaluate_accuracy(y2, y_pred)
+                mean_loss2 += loss_fn.loss(x2, y2, class_score, y_pred)
+
+            mean_acc2 /= len_valid
+            mean_loss2 /= len_valid
+
             self.weights -= learn_rate * mean_grad / len_train
 
-            mean_acc = 0
-            mean_loss = 0
-            for (x, y) in dl_valid:
-                y_pred, class_score = self.predict(x)
-                mean_acc += self.evaluate_accuracy(y, y_pred)
-                mean_loss += loss_fn.loss(x, y, class_score, y_pred)
-
-            mean_acc /= len_valid
-            mean_loss /= len_valid
-
-            valid_res.accuracy.append(mean_acc)
-            valid_res.loss.append(mean_loss)
+            valid_res.accuracy.append(mean_acc2)
+            valid_res.loss.append(mean_loss2)
             # ========================
             print('.', end='')
 
@@ -157,7 +160,6 @@ class LinearClassifier(object):
         aa = torch.Tensor(self.n_classes, img_shape[0], img_shape[1], img_shape[2])
         # aa = torch.Tensor(self.n_classes, for x in img_shape: x)
         w_images = torch.zeros(aa.shape)
-        print(w_images.shape)
         for i in range(self.n_classes):
             w_images[i] = w[:, i].reshape(aa.shape[1:])
 
