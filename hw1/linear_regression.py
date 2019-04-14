@@ -50,10 +50,10 @@ class LinearRegressor(BaseEstimator, RegressorMixin):
         w_opt = None
         # ====== YOUR CODE: ======
         N = len(y)
-        reg = self.reg_lambda*np.eye(X.shape[1])
-        temp = np.linalg.pinv(1 / N * (np.dot(X.T, X) + reg))
-        w_opt = np.dot(1 * np.dot(temp, X.T), y) / N
-
+        reg = N * self.reg_lambda*np.eye(X.shape[1])
+        reg[0, 0] = 0
+        temp = np.linalg.pinv((np.dot(X.T, X) + reg))
+        w_opt = np.dot(1 * np.dot(temp, X.T), y)
         # ========================
 
         self.weights_ = w_opt
