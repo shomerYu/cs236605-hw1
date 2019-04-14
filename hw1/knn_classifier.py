@@ -53,7 +53,8 @@ class KNNClassifier(object):
             # - Set y_pred[i] to the most common class among them
 
             # ====== YOUR CODE: ======
-            raise NotImplementedError()
+            _,indices  = dist_matrix[:,i].topk(self.k,largest=False)
+            y_pred[i] = int(self.y_train[indices].mode()[0])
             # ========================
 
         return y_pred
@@ -80,7 +81,9 @@ class KNNClassifier(object):
 
         dists = torch.tensor([])
         # ====== YOUR CODE: ======
-        raise NotImplementedError()
+        first = (self.x_train**2).sum(1).view(-1,1)
+        second = (x_test**2).sum(1).view(1,-1)
+        dists  = first + second - 2.0* torch.mm(self.x_train, torch.transpose(x_test,0,1))
         # ========================
 
         return dists
@@ -101,7 +104,10 @@ def accuracy(y: Tensor, y_pred: Tensor):
 
     accuracy = None
     # ====== YOUR CODE: ======
-    raise NotImplementedError()
+    equals = torch.eq(y,y_pred)
+    accuracy = torch.sum(equals).item()
+    total = list(y.shape)[0]
+    accuracy = accuracy/total
     # ========================
 
     return accuracy
@@ -131,9 +137,17 @@ def find_best_k(ds_train: Dataset, k_choices, num_folds):
         # different split each iteration), or implement something else.
 
         # ====== YOUR CODE: ======
-        raise NotImplementedError()
-        # ========================
 
+        validation_ratio = 1/num_folds
+        currentAccuracies = []
+        for i in range(num_folds):
+            dl_train, dl_valid = dataloaders.create_train_validation_loaders(ds_train, validation_ratio)
+            model.train(dl_train)
+            x_val, y_val = dataloader_utils.flatten(dl_valid)
+            y_pred = model.predict(x_val)
+            currentAccuracies.append(accuracy(y_val,y_pred))
+        accuracies.append(currentAccuracies)
+    
     best_k_idx = np.argmax([np.mean(acc) for acc in accuracies])
     best_k = k_choices[best_k_idx]
 
