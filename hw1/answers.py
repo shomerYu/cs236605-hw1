@@ -11,12 +11,10 @@ math (delimited with $$).
 part2_q1 = r"""
 **Your answer:**
 
-Write your answer using **markdown** and $\LaTeX$:
-```python
-# A code block
-a = 2
-```
-An equation: $e^{i\pi} -1 = 0$
+Increasing K improves generalization since if we take into account more neighbours we can make the result less 
+vulnerable to outliers.
+Cross validation is as seen in the exercise used to find the best k.
+There are two edge cases when K = N then we will take into account all of the samples and thus simply return the most common class disregarding the real value of the sample, or when K = 1 and thus the class of the sample will be the class of the closest neighbour,which could have an error in his prediction.
 
 """
 # ==============
